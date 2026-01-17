@@ -1,0 +1,16 @@
+Package: cmip6extremes
+Title: Download and Calculate Extreme Indices for CMIP6 NEXT GGPD Data
+Version: 0.1.0
+Authors@R: c(
+    person("OpenAI", "Assistant", email = "assistant@example.com", role = c("aut", "cre"))
+)
+Description: Tools to download CMIP6 NEXT GGPD data and calculate
+    climate extreme indices from daily temperature and precipitation inputs.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    stats,
+    utils
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3

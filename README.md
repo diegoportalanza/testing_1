@@ -1,70 +1,20 @@
 # cmip6extremes
 
-Tools for downloading CMIP6 NEXT GGPD data and calculating extreme climate
-indices from daily temperature and precipitation inputs.
+R package for downloading and processing **NASA NEX-GDDP-CMIP6** data — high-resolution (0.25°), bias-corrected, daily downscaled climate projections from CMIP6 models (1950–2100).  
+Useful for calculating ETCCDI-style extreme climate indices (e.g., TXx, TNn, RX1day, R95p, R10mm) from temperature and precipitation, with support for point-based and raster workflows (clipping to shapefiles, mapping).
+
+**Dataset details**  
+- Source: NASA THREDDS server — https://ds.nccs.nasa.gov/thredds/catalog/AMES/NEX/GDDP-CMIP6/catalog.html  
+- Resolution: 0.25° × 0.25° (~25 km)  
+- Time: Historical (1950–2014) + future SSPs (2015–2100)  
+- Scenarios: historical, ssp126, ssp245, ssp370, ssp585  
+- Variables: tas, tasmax, tasmin, pr, huss, hurs, rlds, rsds, sfcWind (availability varies by model)  
+- Models: 35 total (e.g., ACCESS-CM2, GFDL-ESM4, MRI-ESM2-0, UKESM1-0-LL — full list in function docs or catalog)  
 
 ## Installation
 
+Install from your GitHub repo (recommended for latest version):
+
 ```r
 # install.packages("remotes")
-# remotes::install_local(".")
-```
-
-## Usage
-
-```r
-library(cmip6extremes)
-
-# Build a dataset URL (example values)
-# Note: set a base URL if your GGPD host differs.
-options(cmip6extremes.base_url = "https://cmip6-next.ggpd.org")
-url <- build_ggpd_url(
-  model = "GFDL-ESM4",
-  scenario = "ssp585",
-  variable = "tasmax",
-  year = 2050
-)
-
-# Build a NEX-GDDP-CMIP6 URL from the NASA THREDDS catalog
-# (If you see "could not find function", run library(cmip6extremes) or use
-# the namespace-qualified call shown below.)
-options(cmip6extremes.nex_gddp_base_url = "https://ds.nccs.nasa.gov/thredds/fileServer/AMES/NEX/GDDP-CMIP6")
-nex_url <- cmip6extremes::build_nex_gddp_url(
-  model = "ACCESS-CM2",
-  scenario = "historical",
-  variable = "pr",
-  ensemble = "r1i1p1f1",
-  grid = "gn",
-  year = 2014
-)
-
-# Download data
-file_path <- download_cmip6_next_ggpd(url, "tasmax_2050.nc")
-
-# Clip daily NetCDF using a shapefile
-clipped_path <- clip_ggpd_to_shape(
-  nc_path = file_path,
-  shape_path = "data/basin.shp",
-  out_path = "tasmax_2050_basin.nc",
-  var_name = "tasmax",
-  overwrite = TRUE
-)
-
-# Calculate indices from a data.frame of daily values
-indices <- calculate_extreme_indices(
-  data = daily_values,
-  date_col = "date",
-  tmax_col = "tasmax",
-  tmin_col = "tasmin",
-  pr_col = "pr"
-)
-
-# Calculate a raster index and plot a map
-rx1day_raster <- calculate_extreme_indices_raster(
-  nc_path = clipped_path,
-  var_name = "pr",
-  index = "rx1day"
-)
-
-rx1day_map <- plot_extreme_index_map(rx1day_raster, year = 2050, title = "RX1day")
-```
+remotes::install_github("diegoportalanza/testing_1", ref = "codex/create-r-package-for-extreme-indices-ck7mvf")

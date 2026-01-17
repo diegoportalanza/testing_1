@@ -1,5 +1,6 @@
-export(build_nex_gddp_url)
-export(calculate_extreme_indices)
-export(clip_ggpd_to_shape)
+export(clip_nex_gddp_to_shape)
 export(calculate_extreme_indices_raster)
 export(plot_extreme_index_map)
+export(build_nex_gddp_url)   # from earlier
+export(download_nex_gddp)    # from earlier
+export(calculate_extreme_indices)  # the point-based one

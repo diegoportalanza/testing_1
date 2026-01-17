@@ -1,10 +1,10 @@
 Package: cmip6extremes
-Title: Download and Calculate Extreme Indices for CMIP6 NEXT GGPD Data
+Title: Download and Calculate Extreme Indices for CMIP6 NEX-GDDP Data
 Version: 0.1.0
-Authors@R: c(
-    person("OpenAI", "Assistant", email = "assistant@example.com", role = c("aut", "cre"))
-)
-Description: Tools to download CMIP6 NEXT GGPD data and calculate
+Authors@R: person("Diego", "Portalanza",
+    email = "diego.portalanza@invalid",
+    role = c("aut", "cre"))
+Description: Tools to download CMIP6 NEX-GDDP data and calculate
     climate extreme indices from daily temperature and precipitation inputs.
 License: MIT + file LICENSE
 Encoding: UTF-8

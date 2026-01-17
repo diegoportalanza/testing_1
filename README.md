@@ -18,3 +18,67 @@ Install from your GitHub repo (recommended for latest version):
 ```r
 # install.packages("remotes")
 remotes::install_github("diegoportalanza/testing_1", ref = "codex/create-r-package-for-extreme-indices-ck7mvf")
+For local development (from package root folder):
+R# install.packages(c("devtools", "remotes"))
+devtools::install()
+The package requires:
+
+terra (raster handling)
+sf (shapefiles)
+dplyr (data manipulation)
+ggplot2 (plotting)
+
+Usage
+Load the package:
+Rlibrary(cmip6extremes)
+1. Download daily data from NASA NEX-GDDP-CMIP6
+R# Build URL for tasmax in 2050 (GFDL-ESM4, SSP5-8.5)
+url <- build_nex_gddp_url(
+  model    = "GFDL-ESM4",
+  scenario = "ssp585",
+  variable = "tasmax",
+  ensemble = "r1i1p1f1",   # most common
+  grid     = "gn",
+  year     = 2050
+)
+
+print(url)
+# Download to local file
+download_nex_gddp(url, destfile = "tasmax_GFDL-ESM4_ssp585_2050.nc", overwrite = TRUE)
+2. Clip to a study area (e.g., basin or country shapefile)
+Rclip_nex_gddp_to_shape(
+  nc_path    = "tasmax_GFDL-ESM4_ssp585_2050.nc",
+  shape_path = "data/ecuador_basin.gpkg",          # your shapefile
+  out_path   = "tasmax_2050_basin.nc",
+  var_name   = "tasmax",
+  overwrite  = TRUE
+)
+3. Calculate extreme indices
+From tabular daily data (e.g., station or extracted points):
+R# Assume daily_values is a data.frame with columns: date, tasmax, tasmin, pr
+indices <- calculate_extreme_indices(
+  data      = daily_values,
+  date_col  = "date",
+  tmax_col  = "tasmax",
+  tmin_col  = "tasmin",
+  pr_col    = "pr",
+  baseline_years = c(1995, 2014)   # for R95p threshold
+)
+
+print(indices)
+From raster NetCDF (yearly maps of indices):
+R# Compute multiple indices at once
+extremes_rast <- calculate_extreme_indices_raster(
+  nc_path       = "tasmax_2050_basin.nc",
+  var_name      = "tasmax",
+  indices       = c("txx", "tnn"),
+  baseline_years = c(1995, 2014),   # optional for r95p if included
+  shape_path    = NULL              # already clipped
+)
+
+# Plot one year's map
+plot_extreme_index_map(
+  extremes_rast,
+  year  = 2050,
+  title = "Annual Maximum Daily Temperature (TXx) - GFDL-ESM4 SSP585 2050"
+)
